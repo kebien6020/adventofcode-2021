@@ -1,6 +1,6 @@
 import {window, filter, id, len, loadSync, lt, pipe, trace, map, sum, split, take} from './common.js'
 
-pipe (loadSync('input1.txt')) (
+pipe (loadSync('input01.txt')) (
   split ('\n'),
   map (Number),
   take (20),

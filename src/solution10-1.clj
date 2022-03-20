@@ -17,7 +17,7 @@
     (cond
       (match? x y) (pop acc)
       (closing? y) (reduced y)
-      true (conj acc y))))
+      :else (conj acc y))))
 
 (defn check [s]
   (reduce parensReducer [] s))
