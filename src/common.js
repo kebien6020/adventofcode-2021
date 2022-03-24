@@ -43,7 +43,7 @@ export const pair = a => b => [a, b]
 export const zip = zipWith (pair)
 export const enumerate = x => zip (iota (len (x))) (x)
 export const flat = x => x.flat(1)
-export const occurrences = reduce (o => v => (o[v] = (o[v] ?? 0) + 1, o)) ({})
+export const occurrences = reduce (o => v => ({...o, [v]: (o[v] ?? 0) + 1})) ({})
 export const compose = (...fns) => x => pipe (x) (...fns)
 export const join = sep => x => x.join(sep)
 export const replicate = n => x => [...Array(n)].map(_ => x)
@@ -60,10 +60,12 @@ export const transpose = x => {
   return res
 }
 
+export const fork = l => r => merge => x => merge (l (x)) (r (x))
+
 export const index = idx => x => x[idx]
 export const fst = index (0)
 export const snd = index (1)
-export const fork = l => r => merge => x => merge (l (x)) (r (x))
+export const last = fork (compose (len, add (-1))) (id) (index)
 
 export const eq = a => b => a === b
 export const countBy = fn => compose (filter (fn), len)
@@ -101,3 +103,26 @@ export const find = fn => x => x.find(fn)
 export const sort = cmp => x => x.sort(cmp)
 export const includedIn = arr => x => arr.includes(x)
 export const not = x => !x
+
+export const upper = s => s.toUpperCase()
+export const lower = s => s.toLowerCase()
+export const default_ = def => x => x ?? def
+export const concat = x => y => [...x, ...y]
+export const reverse = x => [...x].reverse()
+
+export const {reduced, reduceBail} = (() => {
+  const sym = Symbol('reduced')
+
+  const reduced = x => ({val: x, [sym]: true})
+
+  const reduceBail = fn => ini => arr => {
+    let acc = ini
+    for (const x of arr) {
+      acc = fn(acc) (x)
+      if (acc?.[sym]) return acc.val
+    }
+    return acc
+  }
+
+  return {reduced, reduceBail}
+})()
