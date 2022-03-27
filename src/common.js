@@ -15,6 +15,7 @@ export const pipe = x => (...fns) => fns.reduce((a, fn) => fn(a), x)
 export const trace = x => (console.log(x), x)
 export const traceMsg = fn => x => (console.log(fn (x)), x)
 
+export const flip = fn => a => b => fn (b) (a)
 export const filter = fn => x => x.filter(fn)
 export const id = x => x
 export const len = x => x.length
@@ -63,6 +64,7 @@ export const transpose = x => {
 export const fork = l => r => merge => x => merge (l (x)) (r (x))
 
 export const index = idx => x => x[idx]
+export const indexOn = flip (index)
 export const fst = index (0)
 export const snd = index (1)
 export const last = fork (compose (len, add (-1))) (id) (index)
